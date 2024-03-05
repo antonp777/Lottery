@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.Validation.SCard import SCard, SCardAddUpdate
+from app.Schemas.SCard import SCard, SCardAddUpdate
 from app.dao.CardDAO import CardDAO
 
 router = APIRouter(
@@ -14,6 +14,10 @@ router = APIRouter(
 async def get_card_all() -> list[SCard]:
     return await CardDAO.get_model_all()
 
+# Получение рандомного номера карты
+@router.get("/randomCard")
+async def get_card_random():
+    return await CardDAO.get_random_card()
 
 # Извлечение Карты по id
 @router.get("/{id_card}")

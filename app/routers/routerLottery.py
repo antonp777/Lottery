@@ -1,19 +1,64 @@
 from fastapi import APIRouter
 
-from app.Validation.SLottery import SLottery, SLotteryAddUpdate
+from aiogram import Bot
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
+
+from BOT.util.generateDataReport import generate_data_for_report
+from app.Schemas.SLottery import SLottery, SLotteryAddUpdate, SLotteryTicketsList
+from app.config import settings
 from app.dao.LotteryDAO import LotteryDAO
-from app.Models.ModelsEnum import LotteryStatus
+from app.Models.ModelsEnum import LotteryStatus, TicketStatus
+from app.dao.TicketDAO import TicketDAO
+from app.dao.TransactionExpenceDAO import TransactionExpenceDAO
 
 router = APIRouter(
     prefix="/lottery",
     tags=["Лотереи"]
 )
+bot = Bot(token=settings.TOKEN_BOT, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
 
-# Извлечение всех Лотерей
+# Извлечение всех Лотерей без билетов
 @router.get("")
+async def get_all_lottery() -> list[SLottery]:
+    return await LotteryDAO.get_model_all()
+
+
+# Извлечение всех Лотерей по статусу без билетов
+@router.get("/status")
 async def get_lottery_by_status(status_lottery: LotteryStatus) -> list[SLottery]:
     return await LotteryDAO.get_model_all(status=status_lottery)
+
+
+# Извлечение всех Лотерей по статусу с билетами
+@router.get("/statusWithTickets")
+async def get_lottery_by_status_with_tickets(status_lottery: LotteryStatus) -> list[SLotteryTicketsList]:
+    return await LotteryDAO.get_lotterys_with_tickets_by_status(status=status_lottery)
+
+
+# Получение количества оставшихся билетов лотереи
+@router.get("/ostTicketLottery")
+async def get_ost_tickets_lottery(id_lottery: int):
+    lottery = await LotteryDAO.get_lottery_with_tickets_by_id(id_lottery)
+    count_tickets = 0
+
+    for i in lottery.tickets:
+        if i.status == TicketStatus.OK:
+            count_tickets = count_tickets + 1
+    return lottery.number_tickets - count_tickets
+
+
+# Розыгрыш лотереи
+@router.get("/resultLottery/{id_lottery}")
+async def result_lottery(id_lottery: int):
+    if await get_ost_tickets_lottery(id_lottery) == 0:
+        info_ticket = await TicketDAO.random_finish_ticket(id_lottery)
+        await LotteryDAO.change_status(lottery_id=id_lottery,
+                                       status=LotteryStatus.NONACTIVE)
+        await bot.send_message(
+            text=f'🏆 Состоялся розыгрыш! 🏆\n🎫 Лотерея: {info_ticket[1]}\n🎟 Выигрышный билет: {info_ticket[0].id}\n🏅 Победитель id: {info_ticket[2]}',
+            chat_id='@cyber_loto')
 
 
 # Извлечение Лотереи по id
@@ -41,7 +86,29 @@ async def update_lottery(id_lottery: int, lottery_data: SLotteryAddUpdate):
                                   status=lottery_data.status)
 
 
+# Изменение статуса Лотереи
+@router.post("/changeStatus/{id_lottery}")
+async def change_status_lottery(id_lottery: int, lottery_status: LotteryStatus):
+    await LotteryDAO.change_status(lottery_id=id_lottery,
+                                   status=lottery_status)
+
+
 # Удаление Лотереи
 @router.delete("/{id_lottery}")
 async def delete_lottery(id_lottery: int):
-    await LotteryDAO.delete_model(id_lottery)
+    error = await LotteryDAO.delete_model(id_lottery)
+    if error is not None:
+        return error
+
+
+# Выгрузка данных из БД для отчёта по выигранным лотереям
+@router.get("/reportFinishLottery")
+async def get_report_finish_lottery_user(id_user: int):
+    list_result = await LotteryDAO.get_report_finish_lottery_user(id_user)
+
+    list_lottery = []
+    for i in list_result:
+        list_lottery.append({'name': i[0], 'id_ticket': i[1]})
+
+    return generate_data_for_report(list_lottery, 2)
+

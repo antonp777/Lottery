@@ -12,6 +12,9 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_PASSWORD: str
     DATABASE_URL: Optional[str] = None
+    SECRET_KEY: str
+    ALGORITHM: str
+    TOKEN_BOT: str
 
     model_config = SettingsConfigDict(env_file=f'{os.path.dirname(os.path.abspath(__file__))}/../.env')
 

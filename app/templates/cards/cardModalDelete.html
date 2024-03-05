@@ -1,0 +1,30 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Удаление карты</h1>
+        </div>
+        <div class="modal-body">
+            <span id="delete-warning">Вы уверены, что хотите удалить карту</span>
+            <div class="text-center fw-bolder text-danger" id="delete-error" style="display: none">Карту невозможно удалить!</div>
+        </div>
+        <div class="modal-footer">
+            <button id="btn-delete" type="button" class="btn btn-primary"
+              hx-delete="/ui/card"
+              hx-vals='{"id_card":"{{id_card}}"}'
+                hx-trigger="click"
+              hx-target="#content_table"
+              hx-swap="innerHTML">Удалить</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        </div>
+    </div>
+    <script>
+        document.getElementById('btn-delete').addEventListener('htmx:afterOnLoad', function() {
+            document.getElementsByClassName('modal-backdrop fade show')[0].removeAttribute('class')
+        });
+        document.getElementById('btn-delete').addEventListener('htmx:responseError', function() {
+            document.getElementById('btn-delete').style.display = "none"
+            document.getElementById('delete-warning').style.display = "none"
+            document.getElementById('delete-error').style.display = "inline"
+            });
+    </script>
+</div>

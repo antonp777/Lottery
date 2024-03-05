@@ -11,6 +11,13 @@ sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 
 from app.config import settings
 from app.database import Base
+from app.Models.Lottery import Lottery
+from app.Models.User import User
+from app.Models.Ticket import Ticket
+from app.Models.Card import Card
+from app.Models.UserAdmin import UserAdmin
+from app.Models.TransactionExpense import TransactionExpense
+from app.Models.TransactionExpense import TransactionExpense
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -28,6 +35,7 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
+
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

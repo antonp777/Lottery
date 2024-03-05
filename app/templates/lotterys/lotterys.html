@@ -1,0 +1,122 @@
+<h1 class="text-white p-4">Лотереи</h1>
+
+<div class="m-3">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addLottery">Добавить лотерею</button>
+</div>
+
+<div class="card bg-dark border border-1 border-secondary p-3">
+    <table id="table" class="table table-dark text-center table-hover align-middle m-0 table-sm">
+        <thead>
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">Название</th>
+                <th scope="col">Количество билетов</th>
+                <th scope="col">Цена билета</th>
+                <th scope="col">Статус</th>
+                <th scope="col">Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for lot in lotterys %}
+            <tr>
+                <td class="align-middle">{{lot.id}}</td>
+                <td>{{lot.name}}</td>
+                <td>{{lot.number_tickets}}</td>
+                <td>{{lot.price_ticket}}</td>
+
+                    <td>
+                        <button class="btn" type="button"
+                                hx-post="/ui/lotteryStatus"
+                                hx-vals='{"id_lottery":"{{lot.id}}"}'
+                                hx-trigger="click"
+                                hx-target="#content_table">
+                            {% if lot.status.name == "ACTIVE" %}
+                                <i class="btn btn-success bi bi-arrow-up"></i>
+                            {% else %}
+                            <i class="btn btn-danger bi bi-arrow-down"></i>
+                            {% endif %}
+                        </button>
+                    </td>
+
+                <td>
+                    <div class="d-inline-flex gap-2">
+                        <button class="btn btn-success" type="button"
+                           hx-get="/ui/lotteryEditModal/{{lot.id}}"
+                           hx-target="#editLottery"
+                           hx-trigger="click"
+                           data-bs-target="#editLottery"
+                           data-bs-toggle="modal">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-danger" type="button"
+                           hx-get="/ui/lotteryDeleteModal/{{lot.id}}"
+                           hx-trigger="click"
+                           hx-target="#deleteLottery"
+                           data-bs-target="#deleteLottery"
+                           data-bs-toggle="modal">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Модальное окно изменения лотереи-->
+<div id="editLottery"
+    class="modal modal-blur fade"
+    style="display: none"
+    aria-hidden="false"
+    tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+<!-- Модальное окно удаления лотереи-->
+<div id="deleteLottery"
+    class="modal modal-blur fade"
+    style="display: none"
+    aria-hidden="false"
+    tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+<!-- Модальное окно добавления лотереи-->
+<div class="modal modal-blur fade" id="addLottery" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Создание новой лотереи</h1>
+            </div>
+            <form hx-post="/ui/lottery" hx-trigger="submit" hx-target=#content_table hx-swap="innerHTML">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nameLottery" class="col-form-label">Название</label>
+                        <input type="text" class="form-control" id="nameLottery" name="name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="countTickets" class="col-form-label">Количество билетов</label>
+                        <input type="text" class="form-control" id="countTickets" name="number_tickets">
+                    </div>
+                    <div class="mb-3">
+                        <label for="priceTicket" class="col-form-label">Стоимость билета</label>
+                        <input type="text" class="form-control" id="priceTicket" name="price_ticket">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    new DataTable('#table');
+</script>
+

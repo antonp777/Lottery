@@ -1,0 +1,22 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Изменение карты</h1>
+        </div>
+        <form hx-post="/ui/card/edit" hx-trigger="submit" hx-target=#content_table hx-swap="innerHTML">
+            <div class="modal-body">
+                <div class="mb-3">
+                    <input type="hidden" class="form-control" id="idCard" name="id_card" value="{{card.id}}">
+                </div>
+                <div class="mb-3">
+                    <label for="numberCard" class="col-form-label">Номер карты</label>
+                    <input type="text" class="form-control" id="numberCard" name="number" value="{{card.number}}">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Сохранить</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </form>
+    </div>
+</div>

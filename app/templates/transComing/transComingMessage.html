@@ -1,0 +1,33 @@
+{% for tran in trans %}
+  <div class="toast toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+          <strong class="me-auto">Пополнение № {{tran.id}}</strong>
+          <small>{{min_message_ago(tran.date)}} мин. назад</small>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+      </div>
+      <div class="toast-body">
+          <div>
+              Cумма: {{tran.sum}}<br>
+              Карта: {{tran.card.number}}<br>
+              Комментарий: {{tran.comment}}
+          </div>
+          <div class="d-inline-flex gap-2 mt-2">
+              <button class="btn btn-success" type="button" data-bs-dismiss="toast"
+                      hx-post="/ui/transComing/success"
+                      hx-target="#content_table"
+                      hx-trigger="click"
+                      hx-vals='{"id":"{{tran.id}}"}'>
+                <i class="bi bi-check"></i>
+              </button>
+              <button class="btn btn-danger" type="button"
+                      hx-get="/ui/transComingModal/{{tran.id}}"
+                      hx-trigger="click"
+                      hx-target="#not-success"
+                      data-bs-target="#not-success"
+                      data-bs-toggle="modal">
+                <i class="bi bi-x-lg"></i>
+              </button>
+          </div>
+      </div>
+  </div>
+{% endfor %}

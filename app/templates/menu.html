@@ -1,0 +1,34 @@
+<nav class="navbar">
+      <div class="container-fluid">
+          <ul class="nav flex-column pt-3 new"
+              style="--bs-nav-link-hover-color: #ffffff; --bs-nav-link-color: #b6a9a7; --bs-nav-link-padding-y:0.7rem;">
+              <li class="nav-item">
+                  <a class="nav-link active fs-4 fw-bold" aria-current="page" href="#"
+                     hx-get="/ui/lottery"
+                     hx-trigger="click"
+                     hx-target="#content_table"
+                     hx-swap="innerHTML">
+                    Лотереи
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link fs-4 fw-bold " aria-current="page" href="#"
+                     hx-get="/ui/cards"
+                     hx-trigger="click"
+                     hx-target="#content_table"
+                     hx-swap="innerHTML">
+                    Карты
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link fs-4 fw-bold" aria-current="page" href="#"
+                      hx-get="/ui/transComing"
+                      hx-trigger="click"
+                      hx-target="#content_table"
+                      hx-swap="innerHTML">
+                      Пополнения
+                  </a>
+              </li>
+          </ul>
+      </div>
+</nav>

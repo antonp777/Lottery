@@ -1,0 +1,22 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Изменение лотереи</h1>
+        </div>
+        <form hx-post="/ui/transComing/not-success" hx-trigger="submit" hx-target=#content_table hx-swap="innerHTML">
+            <div class="modal-body">
+                <div class="mb-3">
+                    <input type="hidden" class="form-control" name="trans_id" value="{{trans_id}}">
+                </div>
+                <div class="mb-3">
+                    <label for="prichinaOtkaza" class="col-form-label">Причина отклонения заявки</label>
+                    <textarea class="form-control" id="prichinaOtkaza" name="prichina_otkaza" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Отклонить</button>
+            </div>
+        </form>
+    </div>
+</div>

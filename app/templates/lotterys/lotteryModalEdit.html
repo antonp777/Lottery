@@ -1,0 +1,42 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Изменение лотереи</h1>
+        </div>
+        <form hx-post="/ui/lottery/edit" hx-trigger="submit" hx-target=#content_table hx-swap="innerHTML">
+            <div class="modal-body">
+                <div class="mb-3">
+                    <input type="hidden" class="form-control" id="idLottery" name="id_lottery" value="{{lottery.id}}">
+                </div>
+                <div class="mb-3">
+                    <label for="nameLottery" class="col-form-label">Название</label>
+                    <input type="text" class="form-control" id="nameLottery" name="name" value="{{lottery.name}}">
+                </div>
+                <div class="mb-3">
+                    <label for="countTickets" class="col-form-label">Количество билетов</label>
+                    <input type="text" class="form-control" id="countTickets" name="number_tickets" value="{{lottery.number_tickets}}">
+                </div>
+                <div class="mb-3">
+                    <label for="priceTicket" class="col-form-label">Стоимость билета</label>
+                    <input type="text" class="form-control" id="priceTicket" name="price_ticket" value="{{lottery.price_ticket}}">
+                </div>
+                <div class="mb-3">
+                    <label for="status" class="col-form-label">Статус</label>
+                    <select class="form-control" id="status" name="status">
+                        {% if lottery.status.name == "ACTIVE" %}
+                            <option selected value="ACTIVE">активно</option>
+                            <option value="NONACTIVE">неактивно</option>
+                        {% else %}
+                            <option value="ACTIVE">активно</option>
+                            <option selected value="NONACTIVE">неактивно</option>
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Сохранить</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </form>
+    </div>
+</div>

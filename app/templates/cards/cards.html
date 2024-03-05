@@ -1,0 +1,92 @@
+<h1 class="text-white p-4">Банковские карты</h1>
+
+<div class="m-3">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCard">Добавить карту</button>
+</div>
+
+<div class="card bg-dark border border-1 border-secondary p-3">
+    <table id="table" class="table table-dark text-center table-hover align-middle m-0 table-sm">
+        <thead>
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">Номер карты</th>
+                <th scope="col">Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for card in cards %}
+                <tr>
+                    <td>{{card.id}}</td>
+                    <td>{{card.number}}</td>
+                    <td>
+                        <div class="d-inline-flex gap-2">
+                            <button class="btn btn-success" type="button"
+                               hx-get="/ui/cardEditModal/{{card.id}}"
+                               hx-trigger="click"
+                               hx-target="#editCard"
+                               data-bs-target="#editCard"
+                               data-bs-toggle="modal">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-danger" type="button"
+                               hx-get="/ui/cardDeleteModal/{{card.id}}"
+                               hx-trigger="click"
+                               hx-target="#deleteCard"
+                               data-bs-target="#deleteCard"
+                               data-bs-toggle="modal">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<!-- Модальное окно изменения карты-->
+<div id="editCard"
+    class="modal modal-blur fade"
+    style="display: none"
+    aria-hidden="false"
+    tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+<!-- Модальное окно удаления карты-->
+<div id="deleteCard"
+    class="modal modal-blur fade"
+    style="display: none"
+    aria-hidden="false"
+    tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+<!-- Модальное окно добавления карты-->
+<div class="modal modal-blur fade" id="addCard" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Создание новой карты</h1>
+            </div>
+            <form hx-post="/ui/card" hx-trigger="submit" hx-target=#content_table hx-swap="innerHTML">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nameLottery" class="col-form-label">Номер карты</label>
+                        <input type="text" class="form-control" id="nameLottery" name="number">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    new DataTable('#table');
+</script>
