@@ -23,7 +23,11 @@ app = FastAPI(openapi_prefix="/api", title="API Lottery", version="1.0.0")
 
 origins = [
     "http://localhost:8000",
+    "http://0.0.0.0:8000",
+    "http://localhost:7777"
+
 ]
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -33,9 +37,6 @@ app.add_middleware(
     allow_headers=["Content-Type", "Authorization", "Set-Coolie", "Access-Control-Allow-Headers",
                    "Access-Control-Allow"],
 )
-app.mount("/static", StaticFiles(directory="../app/static"), name="static")
-
-templates = Jinja2Templates(directory="../app/templates")
 
 app.include_router(routerAuth)
 app.include_router(routerUser)

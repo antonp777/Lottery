@@ -12,7 +12,7 @@ router = APIRouter(
     tags=["AdminPanel"]
 )
 
-templates = Jinja2Templates(directory="../app/templates")
+templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/")

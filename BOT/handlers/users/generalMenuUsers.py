@@ -4,12 +4,10 @@ from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
 
 from BOT.util.deleteMessage import *
-# from filters.isAdmin import isAdmin
 from BOT.handlers.users.textForMessage import text_general_menu
 from app.routers.routerUser import add_user
 
 generalMenuUsers = Router()
-# generalMenuUsers.message.filter(~isAdmin())
 
 keyboard = ReplyKeyboardMarkup(
     keyboard=[

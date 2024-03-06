@@ -1,15 +1,14 @@
 from datetime import datetime, timezone
 
-from fastapi import Request, HTTPException, Depends
+from fastapi import Request, Depends
 from jose import JWTError, jwt
-from starlette import status
 
 from fastapi.templating import Jinja2Templates
 
 from app.config import settings
 from app.dao.UserAdminDAO import UserAdminDAO
 
-templates = Jinja2Templates(directory="../app/templates")
+templates = Jinja2Templates(directory="app/templates")
 
 async def get_current_user_admin(request: Request):
     token = request.cookies.get("access_token_ui")
