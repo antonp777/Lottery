@@ -11,14 +11,16 @@ router = APIRouter(
 
 
 @router.post("")
-async def add_user(chat_id: int):
+async def add_user(chat_id: int, username: str):
     user_find = await UserDAO.get_model_one(chat_id=chat_id)
     if not user_find:
-        await UserDAO.add_model(chat_id=chat_id)
+        await UserDAO.add_model(chat_id=chat_id, username=username)
+
 
 @router.get("/chat_id")
 async def get_user_by_chat_id(chat_id: int):
     return await UserDAO.get_model_one(chat_id=chat_id)
+
 
 # Баланс User по chat_id
 @router.get("/balanceUser/{chat_id}")
@@ -37,3 +39,6 @@ async def get_balance_user(chat_id: int):
 
     return coming_sum - expense_sum
 
+@router.post("updateUsernameInUser")
+async def update_username_in_user(chat_id: int, username: str):
+    await UserDAO.update_username_in_user(chat_id=chat_id, username=username)

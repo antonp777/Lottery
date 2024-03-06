@@ -14,7 +14,7 @@ from app.Models.ModelsEnum import TransComingStatus
 from app.Schemas.STransactionComing import STransactionComingAdd
 from app.routers.routerCard import get_card_random
 from app.routers.routerTransactionComing import add_trans_coming
-from app.routers.routerUser import get_user_by_chat_id
+from app.routers.routerUser import get_user_by_chat_id, update_username_in_user
 
 comingBalanceUser = Router()
 
@@ -54,6 +54,10 @@ async def sum_coming(message: Message, bot: Bot, state: FSMContext):
     # id User в БД
     user = await get_user_by_chat_id(chat_id=message.from_user.id)
 
+    # Проверка username и при необходимости его обновления
+    if message.from_user.username != user.username:
+        await update_username_in_user(chat_id=message.from_user.id, username=message.from_user.username)
+
     await state.set_state(ComingBalance.confirm_pay)
     await state.update_data(card=card[1],
                             card_number=card[0],
@@ -69,9 +73,9 @@ async def sum_coming(message: Message, bot: Bot, state: FSMContext):
 
     await delete_message_user_bot(message, bot)
     await message.answer(
-        f'💵 Сумма пополнения: <b>{message.text}</b> руб./n'
-        f'💳 Реквизиты для оплаты: <b>{card[0]}</b>/n'
-        f'Переведите <b>точную сумму</b> и <b>обязательно</b> укажите комментарий к переводу: <b>{comment}</b>',
+        f'💵 Сумма пополнения: <b>{message.text}</b> руб.\n'
+        f'💳 Реквизиты: <b>{card[0]}</b>\n'
+        f'❗️ Переведите <b>точную сумму</b> и <b>обязательно</b> укажите комментарий к переводу: <b>{comment}</b>️️ ❗️',
         reply_markup=keyboard.as_markup()
     )
 
@@ -99,7 +103,6 @@ async def post_trans_to_admin(callback: CallbackQuery,
                               bot: Bot,
                               state: FSMContext):
     data_state = await state.get_data()
-
 
     # Ответ для User
     await delete_message_bot(callback, bot)

@@ -46,7 +46,7 @@ class TicketDAO(BaseDAO):
             session.add(finish_ticket)
             await session.commit()
 
-            result_ticket = await session.execute(select(Ticket, Lottery.name, User.chat_id)
+            result_ticket = await session.execute(select(Ticket, Lottery.name, User.chat_id, User.username)
                                                   .where(Ticket.id == finish_id_ticket)
                                                   .join(Lottery).join(User))
 

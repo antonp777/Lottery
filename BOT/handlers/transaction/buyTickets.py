@@ -22,7 +22,7 @@ from app.routers.routerLottery import result_lottery
 from app.routers.routerTicket import add_tickets
 from app.routers.routerTransactionComing import add_trans_coming_with_id
 from app.routers.routerTransactionExpence import add_trans_expence, add_trans_expence_with_id
-from app.routers.routerUser import get_balance_user, get_user_by_chat_id
+from app.routers.routerUser import get_balance_user, get_user_by_chat_id, update_username_in_user
 
 buyTickets = Router()
 
@@ -56,7 +56,7 @@ async def buy_tickets(callback: CallbackQuery,
         ost_tickets_for_buy = data_state['ost_tickets_for_buy']
 
     await callback.message.answer(
-        f'ℹ️ Доступно для покупки билетов: <b>{ost_tickets_for_buy}</b> шт.\n✍️ Введите количество билет не более 500 шт.',
+        f'ℹ️ Доступно для покупки <b>{ost_tickets_for_buy} бил.</b>\n✍️ Введите количество билетов, которое хотите приобрести, но не более 500 шт.',
         reply_markup=keyboard.as_markup()
     )
 
@@ -87,7 +87,7 @@ async def count_tickets_for_buy(message: Message,
         data_state = await state.get_data()
 
         await message.answer(
-            f'Вы хотите купить <b>{message.text}</b> шт. билетов.\nОбщая стоимость составляет <b>{data_state['price_ticket'] * int(message.text)}</b> руб.',
+            f'Вы хотите купить <b>{message.text}</b> бил.\nОбщая стоимость составляет <b>{data_state['price_ticket'] * int(message.text)}</b> руб.',
             reply_markup=keyboard.as_markup()
         )
     else:
@@ -128,6 +128,10 @@ async def confirm_buy_at_user(callback: CallbackQuery,
 
     user = await get_user_by_chat_id(callback.from_user.id)
 
+    # Проверка username и при необходимости его обновления
+    if callback.from_user.username != user.username:
+        await update_username_in_user(chat_id=callback.from_user.id, username=callback.from_user.username)
+
     # Если БАЛАНС User МЕНЬШЕ стоимости билетов
     if balance_user < coast_tickets:
         # Генерация рандомной карты из БД
@@ -148,9 +152,9 @@ async def confirm_buy_at_user(callback: CallbackQuery,
                                                )).adjust(2)
 
         await callback.message.answer(
-            f'💵 Сумма пополнения: <b>{sum_for_pay}</b> руб./n'
-            f'💳 Реквизиты для оплаты: <b>{card[0]}</b>/n'
-            f'Переведите <b>точную сумму</b> и <b>обязательно</b> укажите комментарий к переводу: <b>{comment}</b>',
+            f'💵 Сумма пополнения: <b>{sum_for_pay}</b> руб.\n'
+            f'💳 Реквизиты: <b>{card[0]}</b>\n'
+            f'❗️ Переведите <b>точную сумму</b> и <b>обязательно</b> укажите комментарий к переводу: <b>{comment}</b> ❗️',
             reply_markup=keyboard.as_markup()
         )
         await delete_message_bot(callback, bot)

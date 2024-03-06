@@ -57,7 +57,7 @@ async def result_lottery(id_lottery: int):
         await LotteryDAO.change_status(lottery_id=id_lottery,
                                        status=LotteryStatus.NONACTIVE)
         await bot.send_message(
-            text=f'🏆 Состоялся розыгрыш! 🏆\n🎫 Лотерея: {info_ticket[1]}\n🎟 Выигрышный билет: {info_ticket[0].id}\n🏅 Победитель id: {info_ticket[2]}',
+            text=f'🏆 Состоялся розыгрыш! 🏆\n🎫 Лотерея: {info_ticket[1]}\n🎟 Выигрышный билет: {info_ticket[0].id}\n🏅 Победитель id: {info_ticket[2]}, username: {info_ticket[3]}',
             chat_id='@cyber_loto')
 
 

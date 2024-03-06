@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.orm import joinedload
 
 from app.Models.User import User
@@ -19,4 +19,12 @@ class UserDAO(BaseDAO):
             result = await session.execute(query)
             exist_model = result.unique().scalar_one()
             return exist_model
+
+    @classmethod
+    async def update_username_in_user(cls, chat_id: int, username: str):
+        async with async_session() as session:
+            query = update(User).where(User.chat_id == chat_id).values(username=username)
+            await session.execute(query)
+            await session.commit()
+
 

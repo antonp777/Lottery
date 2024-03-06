@@ -15,7 +15,7 @@
                     <th>Причина отказа</th>
                 </tr>
             </thead>
-            <tbody hx-get="/ui/updateTableTransComing" hx-trigger="every 30s" hx-swap="outerHTML">
+            <tbody hx-get="/ui/updateTableTransComing" hx-trigger="every 10s" hx-swap="outerHTML">
             {% for tran in trans %}
                 <tr>
                     <td >{{tran.id}}</td>
