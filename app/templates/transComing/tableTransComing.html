@@ -1,42 +1,44 @@
-<tbody>
-    {% for tran in trans %}
-        <tr>
-            <td >{{tran.id}}</td>
-            <td>{{tran.date.strftime("%d.%m.%Y %H:%M")}}</td>
-            <td>{{tran.sum}}</td>
-            <td>{{tran.card.number}}</td>
-            <td>{{tran.comment}}</td>
-            <td>{{tran.user.chat_id}}</td>
-            {% if tran.status.name == "WAIT" %}
-                <td>
-                    <div class="d-inline-flex gap-2">
-                        <button class="btn btn-success" type="button"
-                                hx-post="/ui/transComing/success"
-                                hx-vals='{"id":"{{tran.id}}"}'
-                                hx-target="#content_table"
-                                hx-trigger="click">
-                            <i class="bi bi-check"></i>
-                        </button>
-                        <button class="btn btn-danger" type="button"
-                                hx-get="/ui/transComingModal/{{tran.id}}"
-                                hx-trigger="click"
-                                hx-target="#not-success"
-                                data-bs-target="#not-success"
-                                data-bs-toggle="modal">
-                            <i class="bi bi-x-lg"></i>
-                        </button>
-                    </div>
-                </td>
-            {% elif tran.status.name == "OK" %}
-                <td>
-                    <i class="btn btn-success bi bi-check-all"></i>
-                </td>
-            {% elif tran.status.name == "NOTOK" %}
-                <td>
-                    <i class="btn btn-danger bi bi-x-lg"></i>
-                </td>
-            {% endif %}
-            <td>{{tran.prichinaOtkaza}}</td>
-        </tr>
-    {% endfor %}
-</tbody>
+<tbody hx-get="/ui/updateTableTransComing" hx-trigger="every 10s" hx-swap="outerHTML">
+            {% for tran in trans %}
+                <tr>
+                    <td >{{tran.id}}</td>
+                    <td>{{tran.date.strftime("%d.%m.%Y %H:%M")}}</td>
+                    <td>{{tran.sum}}</td>
+                    <td>{{tran.card.number}}</td>
+                    <td>{{tran.comment}}</td>
+                    <td>{{tran.user.chat_id}}</td>
+                    {% if tran.status.name == "WAIT" %}
+                        <td>
+                            <div class="d-inline-flex gap-2">
+                                <button class="btn btn-success" type="button"
+                                        hx-post="/ui/transComing/success"
+                                        hx-vals='{"id":"{{tran.id}}"}'
+                                        hx-target="#content_table"
+                                        hx-trigger="click"
+                                        hx-swap="innerHTML">
+                                    <i class="bi bi-check"></i>
+                                </button>
+                                <button class="btn btn-danger" type="button"
+                                        hx-get="/ui/transComingModal/{{tran.id}}"
+                                        hx-trigger="click"
+                                        hx-target="#not-success"
+                                        hx-swap="innerHTML"
+                                        data-bs-target="#not-success"
+                                        data-bs-toggle="modal">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </div>
+                        </td>
+                    {% elif tran.status.name == "OK" %}
+                        <td>
+                            <i class="btn btn-success bi bi-check-all"></i>
+                        </td>
+                    {% elif tran.status.name == "NOTOK" %}
+                        <td>
+                            <i class="btn btn-danger bi bi-x-lg"></i>
+                        </td>
+                    {% endif %}
+                    <td>{{tran.prichinaOtkaza}}</td>
+                </tr>
+            {% endfor %}
+            </tbody>

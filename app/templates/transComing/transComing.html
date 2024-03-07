@@ -1,5 +1,5 @@
-<div hx-get="/ui/transComing" hx-trigger="every 10s" hx-swap="outerHTML">
-    <h1 class="text-white p-4">Пополнения</h1>
+<div>
+<h1 class="text-white p-4">Пополнения</h1>
 
     <div class="card bg-dark border border-1 border-secondary p-3">
         <table id="table" class="table table-dark text-center table-hover align-middle m-0 table-sm">
@@ -15,7 +15,7 @@
                     <th>Причина отказа</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody hx-get="/ui/updateTableTransComing" hx-trigger="every 10s" hx-swap="outerHTML">
             {% for tran in trans %}
                 <tr>
                     <td >{{tran.id}}</td>
@@ -31,13 +31,15 @@
                                         hx-post="/ui/transComing/success"
                                         hx-vals='{"id":"{{tran.id}}"}'
                                         hx-target="#content_table"
-                                        hx-trigger="click">
+                                        hx-trigger="click"
+                                        hx-swap="innerHTML">
                                     <i class="bi bi-check"></i>
                                 </button>
                                 <button class="btn btn-danger" type="button"
                                         hx-get="/ui/transComingModal/{{tran.id}}"
                                         hx-trigger="click"
                                         hx-target="#not-success"
+                                        hx-swap="innerHTML"
                                         data-bs-target="#not-success"
                                         data-bs-toggle="modal">
                                     <i class="bi bi-x-lg"></i>
@@ -61,16 +63,7 @@
     </div>
 </div>
 
-<div id="not-success"
-    class="modal modal-blur fade"
-    style="display: none"
-    aria-hidden="false"
-    tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
-
 <script>
     new DataTable('#table');
 </script>
+</div>

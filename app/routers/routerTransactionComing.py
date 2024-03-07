@@ -98,7 +98,8 @@ async def update_status_prichina_trans_coming(id_trans: int, trans_data: STransa
     await TransactionComingDAO.update_model(model_id=id_trans, status=trans_data.status,
                                             prichinaOtkaza=trans_data.prichinaOtkaza)
 
-    await delete_trans_expence(id_trans=trans.id_trans_expence_info)
+    if trans.id_trans_expence_info is not None:
+        await delete_trans_expence(id_trans=trans.id_trans_expence_info)
 
 
 @router.get("/report")
