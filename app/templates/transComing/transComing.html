@@ -1,4 +1,4 @@
-<div>
+<div hx-get="/ui/transComing" hx-trigger="every 10s" hx-swap="outerHTML">
     <h1 class="text-white p-4">Пополнения</h1>
 
     <div class="card bg-dark border border-1 border-secondary p-3">
@@ -15,7 +15,6 @@
                     <th>Причина отказа</th>
                 </tr>
             </thead>
-            <div hx-get="/ui/updateTableTransComing" hx-trigger="every 10s">
             <tbody>
             {% for tran in trans %}
                 <tr>
@@ -58,7 +57,6 @@
                 </tr>
             {% endfor %}
             </tbody>
-            </div>
         </table>
     </div>
 </div>
