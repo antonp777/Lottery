@@ -10,6 +10,7 @@ class User(Base):
     id: Mapped[intpk]
     chat_id: Mapped[BigInteger] = mapped_column(BigInteger)
     username: Mapped[str | None]
+    last_message_id_bot: Mapped[int | None]
     import app.Models.TransactionComing
     # transaction_coming = relationship("app.Models.TransactionComing.TransactionComing")
     transaction_coming: Mapped[list["app.Models.TransactionComing.TransactionComing"]] = relationship()

@@ -11,10 +11,21 @@ services:
     volumes:
       - ./data:/var/lib/postgresql/data
 
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - ./pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+
   app:
     image: lottery_image
     build:
-      dockerfile: Dockerfile
       context: .
     container_name: lottery_app
     restart: always
@@ -25,13 +36,7 @@ services:
     volumes:
       - .:/app
     command: >
-      sh -c "alembic upgrade head
-      && uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
+      bash -c "alembic upgrade head && uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000"
       && python BOT/bot.py"
     ports:
       - 7777:8000
-
-
-networks:
-  default:
-    name: hello_fastapi

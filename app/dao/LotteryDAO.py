@@ -49,13 +49,3 @@ class LotteryDAO(BaseDAO):
                 .join(Lottery)
                 )
         return result.all()
-
-    @classmethod
-    async def get_report_finish_lottery_user(cls, id_user: int):
-        async with (async_session() as session):
-            result = await session.execute(
-                select(Lottery.name, Ticket.id)
-                .where(Ticket.id_user == id_user)
-                .filter(Ticket.isFinish == True)
-                .join(Lottery))
-            return result.all()

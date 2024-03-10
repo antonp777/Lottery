@@ -39,6 +39,12 @@ async def get_balance_user(chat_id: int):
 
     return coming_sum - expense_sum
 
+
 @router.post("updateUsernameInUser")
 async def update_username_in_user(chat_id: int, username: str):
     await UserDAO.update_username_in_user(chat_id=chat_id, username=username)
+
+
+@router.post("updateMessageBotInUser")
+async def update_last_mes_bot_in_user(chat_id: int, mes_id: int):
+    await UserDAO.update_mes_bot_in_user(chat_id=chat_id, last_message_id_bot=mes_id)

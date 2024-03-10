@@ -99,16 +99,3 @@ async def delete_lottery(id_lottery: int):
     error = await LotteryDAO.delete_model(id_lottery)
     if error is not None:
         return error
-
-
-# Выгрузка данных из БД для отчёта по выигранным лотереям
-@router.get("/reportFinishLottery")
-async def get_report_finish_lottery_user(id_user: int):
-    list_result = await LotteryDAO.get_report_finish_lottery_user(id_user)
-
-    list_lottery = []
-    for i in list_result:
-        list_lottery.append({'name': i[0], 'id_ticket': i[1]})
-
-    return generate_data_for_report(list_lottery, 2)
-

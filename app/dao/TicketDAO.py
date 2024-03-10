@@ -2,6 +2,7 @@ import random
 
 from sqlalchemy import select, update
 
+from BOT.util.generateDataReport import generate_data_for_report
 from app.Models.Lottery import Lottery
 from app.Models.ModelsEnum import TicketStatus
 from app.Models.Ticket import Ticket
@@ -24,7 +25,8 @@ class TicketDAO(BaseDAO):
     @classmethod
     async def update_all_tickets(cls, id_trans: int, status_search: TicketStatus, **data):
         async with async_session() as session:
-            query = update(Ticket).where(Ticket.id_trans_expense == id_trans).where(Ticket.status == status_search).values(**data)
+            query = update(Ticket).where(Ticket.id_trans_expense == id_trans).where(
+                Ticket.status == status_search).values(**data)
             await session.execute(query)
             await session.commit()
 
@@ -53,3 +55,21 @@ class TicketDAO(BaseDAO):
             info_ticket = result_ticket.one()
 
             return info_ticket
+
+    @classmethod
+    async def get_finish_ticket_by_user(cls, id_user: int):
+        async with (async_session() as session):
+            result = await session.execute(
+                select(Lottery.name, Ticket.id)
+                .filter(Ticket.id_user == id_user)
+                .filter(Ticket.isFinish == True)
+                .join(Lottery))
+
+            res = result.all()
+
+            data = []
+            for i in res:
+                data.append({'name': i[0], 'id_ticket': i[1]})
+            print(data)
+
+            return data

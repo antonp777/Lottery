@@ -14,7 +14,7 @@ from app.Models.ModelsEnum import TransComingStatus
 from app.Schemas.STransactionComing import STransactionComingAdd
 from app.routers.routerCard import get_card_random
 from app.routers.routerTransactionComing import add_trans_coming
-from app.routers.routerUser import get_user_by_chat_id, update_username_in_user
+from app.routers.routerUser import get_user_by_chat_id, update_username_in_user, update_last_mes_bot_in_user
 
 comingBalanceUser = Router()
 
@@ -33,15 +33,16 @@ async def query_sum_coming(message: Message | CallbackQuery, bot: Bot, state: FS
     text = '✍️ Введите сумму для пополнения'
     if isinstance(message, Message):
         await delete_message_user_bot(message, bot)
-        await message.answer(text,
+        msg = await message.answer(text,
                              reply_markup=InlineKeyboardMarkup(
                                  inline_keyboard=[[inlineKeyPeredumalCabinetMenu]]))
+        await update_last_mes_bot_in_user(chat_id=message.from_user.id, mes_id=msg.message_id)
     else:
         await delete_message_bot(message, bot)
-        await message.message.answer(text,
+        msg = await message.message.answer(text,
                                      reply_markup=InlineKeyboardMarkup(
                                          inline_keyboard=[[inlineKeyPeredumalCabinetMenu]]))
-
+        await update_last_mes_bot_in_user(chat_id=message.from_user.id, mes_id=msg.message_id)
 
 # 2. Подтверждение перевода
 @comingBalanceUser.message(F.text.regexp(r"^(\d+)$"), ComingBalance.sum_coming)
@@ -95,6 +96,7 @@ async def error_sum_coming(message: Message, bot: Bot, state: FSMContext):
     )
     await delete_message_user_bot(message, bot)
     await message.answer(text, reply_markup=keyboard)
+
 
 
 # 3. Формирование обработки перевода

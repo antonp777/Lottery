@@ -10,7 +10,7 @@ from BOT.util.deleteMessage import *
 from BOT.keyboards.inlineKeys import inlineKeyGeneralMenu, inlineKeyCabinetMenu
 from app.routers.routerTransactionComing import get_report_trans_coming
 from app.routers.routerTransactionExpence import get_report_trans_expense
-from app.routers.routerUser import get_user_by_chat_id
+from app.routers.routerUser import get_user_by_chat_id, update_last_mes_bot_in_user
 
 historyTrans = Router()
 
@@ -89,8 +89,9 @@ async def list_filter_report(message: Message, bot: Bot, state: FSMContext):
         ]
     )
     await delete_message_user_bot(message, bot)
-    await message.answer('📍 Выберите категорию операции',
+    msg = await message.answer('📍 Выберите категорию операции',
                          reply_markup=keyboard)
+    await update_last_mes_bot_in_user(chat_id=message.from_user.id, mes_id=msg.message_id)
 
 
 @historyTrans.callback_query(PanaginationHistory.filter_report)

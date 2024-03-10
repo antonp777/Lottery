@@ -22,7 +22,8 @@ from app.routers.routerLottery import result_lottery
 from app.routers.routerTicket import add_tickets
 from app.routers.routerTransactionComing import add_trans_coming_with_id
 from app.routers.routerTransactionExpence import add_trans_expence, add_trans_expence_with_id
-from app.routers.routerUser import get_balance_user, get_user_by_chat_id, update_username_in_user
+from app.routers.routerUser import get_balance_user, get_user_by_chat_id, update_username_in_user, \
+    update_last_mes_bot_in_user
 
 buyTickets = Router()
 
@@ -55,14 +56,15 @@ async def buy_tickets(callback: CallbackQuery,
         data_state = await state.get_data()
         ost_tickets_for_buy = data_state['ost_tickets_for_buy']
 
-    await callback.message.answer(
+    await delete_message_bot(callback, bot)
+    msg = await callback.message.answer(
         f'ℹ️ Доступно для покупки <b>{ost_tickets_for_buy} бил.</b>\n✍️ Введите количество билетов, которое хотите приобрести, но не более 500 шт.',
         reply_markup=keyboard.as_markup()
     )
+    await update_last_mes_bot_in_user(chat_id=callback.from_user.id, mes_id=msg.message_id)
 
     await state.set_state(BuyTickets.count_tickets)
 
-    await delete_message_bot(callback, bot)
 
 
 # 2.1. Подтверждение покупки билетов
@@ -103,7 +105,8 @@ async def count_tickets_for_buy_error(message: Message,
                                       text: str = None):
     await state.set_state(BuyTickets.count_tickets_error)
 
-    text = '‼️ Ошибка ввода: Вы ввели не число!\nKоличество билетов должно быть только число!'
+    if text is None:
+        text = '‼️ Ошибка ввода: Вы ввели не число!\nKоличество билетов должно быть только число!'
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             [inlineKeyPeredumalGeneralMenu,
@@ -111,9 +114,10 @@ async def count_tickets_for_buy_error(message: Message,
              ]
         ]
     )
+    await delete_message_user_bot(message, bot)
+
     await message.answer(text, reply_markup=keyboard)
 
-    await delete_message_user_bot(message, bot)
 
 
 # 3. Подтверждение оплаты от User/Покупка билетов с баланса User

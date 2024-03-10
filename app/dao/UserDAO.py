@@ -27,4 +27,10 @@ class UserDAO(BaseDAO):
             await session.execute(query)
             await session.commit()
 
+    @classmethod
+    async def update_mes_bot_in_user(cls, chat_id: int, last_message_id_bot: int):
+        async with async_session() as session:
+            query = update(User).where(User.chat_id == chat_id).values(last_message_id_bot=last_message_id_bot)
+            await session.execute(query)
+            await session.commit()
 

@@ -1,15 +1,14 @@
-from aiogram import Router, F, Bot
+from aiogram import Router, F
 
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
-from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.filters import StateFilter
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 
 from BOT.util.deleteMessage import *
-from BOT.keyboards.inlineKeys import inlineKeyGeneralMenu, inlineKeyCabinetMenu
+from BOT.keyboards.inlineKeys import inlineKeyCabinetMenu
 from app.Models.ModelsEnum import LotteryStatus
-from app.routers.routerLottery import get_report_finish_lottery_user
+from app.routers.routerTicket import get_report_finish_ticket_by_user
 from app.routers.routerTransactionExpence import get_report_lottery_for_user
 from app.routers.routerUser import get_user_by_chat_id
 
@@ -103,10 +102,9 @@ async def show_fist_page(callback: CallbackQuery, bot: Bot, state: FSMContext):
     elif callback.data == 'not_active_user_lottery':
         data_report = await get_report_lottery_for_user(id_user.id, LotteryStatus.NONACTIVE)
         name_report = category_lottery[1]
-    elif callback.data == category_lottery[2]:
-        data_report = await get_report_finish_lottery_user(id_user.id)
-        name_report = '🥇🏆🎗 Выигранные розыгрыши'
-
+    elif callback.data == 'winery_user_lottery':
+        data_report = await get_report_finish_ticket_by_user(id_user.id)
+        name_report = category_lottery[2]
     text_empty = '🤷 У Вас ещё нет истории в данной категории'
 
     # Ответ если нет данных для отчёта

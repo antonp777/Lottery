@@ -1,12 +1,14 @@
 from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup
 
 from BOT.util.deleteMessage import *
-from app.routers.routerUser import get_balance_user, get_user_by_chat_id, update_username_in_user
+from app.routers.routerUser import get_balance_user, get_user_by_chat_id, update_username_in_user, \
+    update_last_mes_bot_in_user
 
 cabinetUser = Router()
 
+text_keyboard_cabinetUser = ['💳 Пополнить', '👑 Мои розыгрыши', '🔎 История операций', '💼 Личный кабинет']
 keyboard = ReplyKeyboardMarkup(
     keyboard=[
         [
@@ -40,7 +42,9 @@ async def menu_cabinet_user(message: Message | CallbackQuery,
 
     if isinstance(message, Message):
         await delete_message_user_bot(message, bot)
-        await message.answer(text, reply_markup=keyboard)
+        msg = await message.answer(text, reply_markup=keyboard)
+        await update_last_mes_bot_in_user(chat_id=message.from_user.id, mes_id=msg.message_id)
     else:
-        await message.message.answer(text, reply_markup=keyboard)
+        msg = await message.message.answer(text, reply_markup=keyboard)
+        await update_last_mes_bot_in_user(chat_id=message.from_user.id, mes_id=msg.message_id)
         await delete_message_bot(message, bot)
