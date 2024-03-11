@@ -8,6 +8,7 @@ from pydantic import BaseModel, ConfigDict
 from app.Models.ModelsEnum import TransComingStatus
 from app.Schemas.STransactionComing import STransactionComingUpdateStatus, STransactionComingUpdateStatusPrichina
 from app.auth.dependencies import get_login_page
+from app.config import settings
 from app.routers.routerTransactionComing import get_trans_coming_user_card, update_status_trans_coming, \
     update_status_prichina_trans_coming, get_trans_coming_user_card_status
 
@@ -16,7 +17,7 @@ router = APIRouter(
     tags=["AdminPanel"]
 )
 
-templates = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(directory=settings.get_app_root()+"/app/templates")
 
 
 def min_message_ago(date: datetime):

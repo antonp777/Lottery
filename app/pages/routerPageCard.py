@@ -3,6 +3,7 @@ from fastapi.templating import Jinja2Templates
 
 from app.Schemas.SCard import SCardAddUpdate
 from app.auth.dependencies import get_login_page
+from app.config import settings
 from app.routers.routerCard import get_card_all, delete_card, add_card, get_card_one_by_id, update_card
 
 router = APIRouter(
@@ -10,7 +11,7 @@ router = APIRouter(
     tags=["AdminPanel"]
 )
 
-templates = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(directory=settings.get_app_root()+"/app/templates")
 
 
 # Таблица со всеми картами

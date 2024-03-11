@@ -4,6 +4,7 @@ from fastapi.templating import Jinja2Templates
 from app.Models.ModelsEnum import LotteryStatus
 from app.Schemas.SLottery import SLotteryAddUpdate
 from app.auth.dependencies import get_login_page
+from app.config import settings
 from app.routers.routerLottery import get_all_lottery, delete_lottery, create_lottery, get_lottery_by_id, \
     update_lottery, change_status_lottery
 
@@ -12,7 +13,7 @@ router = APIRouter(
     tags=["AdminPanel"]
 )
 
-templates = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(settings.get_app_root()+"/app/templates")
 
 
 # Таблица со всеми лотереями

@@ -9,6 +9,7 @@ from app.database import Base, intpk
 class Ticket(Base):
     __tablename__ = 'tickets'
     id: Mapped[intpk]
+    number_ticket: Mapped[int | None]
     isFinish: Mapped[bool]
     status: Mapped[TicketStatus]
     id_user: Mapped[int] = mapped_column(ForeignKey("users.id"))

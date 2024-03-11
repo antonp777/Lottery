@@ -42,8 +42,10 @@ class TicketDAO(BaseDAO):
                 list_id_tickets.append(ticket.id)
 
             finish_id_ticket = random.choice(list_id_tickets)
+            number_ticket_in_lottery = list_id_tickets.index(finish_id_ticket)+1
 
             finish_ticket = await session.get(Ticket, finish_id_ticket)
+            finish_ticket.number_ticket = number_ticket_in_lottery
             finish_ticket.isFinish = True
             session.add(finish_ticket)
             await session.commit()
@@ -60,7 +62,7 @@ class TicketDAO(BaseDAO):
     async def get_finish_ticket_by_user(cls, id_user: int):
         async with (async_session() as session):
             result = await session.execute(
-                select(Lottery.name, Ticket.id)
+                select(Lottery.name, Ticket.number_ticket)
                 .filter(Ticket.id_user == id_user)
                 .filter(Ticket.isFinish == True)
                 .join(Lottery))
@@ -69,7 +71,6 @@ class TicketDAO(BaseDAO):
 
             data = []
             for i in res:
-                data.append({'name': i[0], 'id_ticket': i[1]})
-            print(data)
+                data.append({'name': i[0], 'number_ticket': i[1]})
 
             return data

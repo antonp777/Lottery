@@ -1,4 +1,5 @@
 import os
+from functools import lru_cache
 from typing import Optional
 
 from pydantic import PostgresDsn, field_validator, ValidationInfo, Field
@@ -32,5 +33,8 @@ class Settings(BaseSettings):
             path=info.data.get("DB_NAME") or "",
         ).unicode_string()
 
+    @classmethod
+    def get_app_root(cls):
+        return os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 settings = Settings()

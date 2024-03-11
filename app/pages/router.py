@@ -5,6 +5,7 @@ from fastapi.templating import Jinja2Templates
 from app.Models.UserAdmin import UserAdmin
 from app.Schemas.SUserAdmin import SUserAdmin
 from app.auth.dependencies import get_current_user_admin
+from app.config import settings
 from app.routers.routerAuth import login
 
 router = APIRouter(
@@ -12,7 +13,7 @@ router = APIRouter(
     tags=["AdminPanel"]
 )
 
-templates = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(directory=settings.get_app_root()+"/app/templates")
 
 
 @router.get("/")
