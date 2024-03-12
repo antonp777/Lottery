@@ -89,7 +89,7 @@ async def update_status_trans_coming(id_trans: int, trans_data: STransactionComi
                     id_user=user.id,
                     isFinish=False,
                     id_lottery=trans_exp.id_lottery,
-                    id_trans_expense=id_trans,
+                    id_trans_expense=trans.id_trans_expence_info,
                     status=TicketStatus.OK
                 )
                 tickets.append(ticket)
@@ -116,7 +116,7 @@ async def update_status_trans_coming(id_trans: int, trans_data: STransactionComi
                     id_user=user.id,
                     isFinish=False,
                     id_lottery=trans_exp.id_lottery,
-                    id_trans_expense=id_trans,
+                    id_trans_expense=trans.id_trans_expence_info,
                     status=TicketStatus.OK
                 )
                 tickets.append(ticket)
