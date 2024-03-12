@@ -49,7 +49,7 @@ async def get_report_trans_expense(id_user: int):
     list_trans_expense = []
     for i in list_result:
         list_trans_expense.append(
-            {'date': i[0].date.strftime('%d.%m.%Y %H:%M'), 'lottery': i[1], 'count_tickets': i[0].count_tickets,
+            {'id': i[0].id, 'date': i[0].date.strftime('%d.%m.%Y %H:%M'), 'lottery': i[1], 'count_tickets': i[0].count_tickets,
              'sum': i[0].sum})
 
     return generate_data_for_report(list_trans_expense, 2)

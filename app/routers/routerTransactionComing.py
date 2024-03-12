@@ -168,7 +168,7 @@ async def get_report_trans_coming(id_user: int):
     list_trans_coming = []
     for i in list_result:
 
-        item = {'id': i.id, 'date': i.date.strftime('%d.%m.%Y %H:%M'), 'sum': i.sum}
+        item = {'id': i.id, 'date': i.date.strftime('%d.%m.%Y %H:%M'), 'sum': i.sum, 'comment': i.comment}
         if i.status == TransComingStatus.OK:
             item['status'] = 'проведена'
         elif i.status == TransComingStatus.NOTOK:

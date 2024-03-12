@@ -23,13 +23,13 @@ class PanaginationHistory(StatesGroup):
 category_trans = ['💵 Пополнения', '🎫 Покупки билетов']
 
 
-def text_data(name_report, param1, param2, param3, param4, param5=None):
+def text_data(name_report, param1, param2, param3, param4, param5, param6=None):
     if name_report == 'операции ' + category_trans[0]:
-        result = f'<b>Операция: </b>{param1}\n<b>Дата:</b> {param2}\n<b>Сумма:</b> {param3}\n<b>Статус:</b> {param4}'
-        if param5 is not None:
-            result += f'\n<b>Причина:</b> {param5}'
+        result = f'<b>Операция: </b>{param1}\n<b>Дата:</b> {param2}\n<b>Сумма:</b> {param3}\n<b>Комментарий:</b> {param4}\n<b>Статус:</b> {param5}'
+        if param6 is not None:
+            result += f'\n<b>Причина:</b> {param6}'
     else:
-        result = f'<b>Дата: </b>{param1}\n<b>Лотерея:</b> {param2}\n<b>Количество билетов:</b> {param3}\n<b>Сумма:</b> {param4}'
+        result = f'<b>Операция: </b>{param1}\n<b>Дата: </b>{param2}\n<b>Лотерея:</b> {param3}\n<b>Количество билетов:</b> {param4}\n<b>Сумма:</b> {param5}'
     return result
 
 
@@ -41,11 +41,10 @@ def page_pang(data_report, name_report, page):
         params = []
         for i in value.values():
             params.append(i)
-            print(i)
-        if len(params) > 4:
-            text_mes = text_mes + text_data(name_report, params[0], params[1], params[2], params[3], params[4]) + '\n\n'
+        if len(params) > 5:
+            text_mes = text_mes + text_data(name_report, params[0], params[1], params[2], params[3], params[4], params[5]) + '\n\n'
         else:
-            text_mes = text_mes + text_data(name_report, params[0], params[1], params[2], params[3]) + '\n\n'
+            text_mes = text_mes + text_data(name_report, params[0], params[1], params[2], params[3], params[4]) + '\n\n'
 
     buttons = []
     if page == 1 and count_page > 1:

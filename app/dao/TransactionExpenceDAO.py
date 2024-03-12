@@ -1,4 +1,4 @@
-from sqlalchemy import select, func
+from sqlalchemy import select, func, desc
 
 from app.Models.Lottery import Lottery
 from app.Models.TransactionExpense import TransactionExpense
@@ -24,7 +24,7 @@ class TransactionExpenceDAO(BaseDAO):
         async with async_session() as session:
             result = await session.execute(
                 select(TransactionExpense, Lottery.name)
-                .where(TransactionExpense.id_user == id_user).join(Lottery))
+                .where(TransactionExpense.id_user == id_user).join(Lottery).order_by(desc(TransactionExpense.id)))
             return result.all()
 
     @classmethod
