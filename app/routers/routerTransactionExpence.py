@@ -34,6 +34,10 @@ async def add_trans_expence_with_id(data: STransactionExpenseAdd):
 async def update_status_trans_expence(id_trans: int, status: TransExpenseStatus):
     await TransactionExpenceDAO.update_model(model_id=id_trans, status=status)
 
+@router.post("/updateStatusSumCountTicket")
+async def update_status_sum_count_tickets_trans_expence(id_trans: int, status: TransExpenseStatus, sum: int, count_tickets: int):
+    await TransactionExpenceDAO.update_model(model_id=id_trans, status=status, sum=sum, count_tickets=count_tickets)
+
 @router.delete("")
 async def delete_trans_expence(id_trans: int):
     await TransactionExpenceDAO.delete_model(model_id=id_trans)

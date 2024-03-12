@@ -240,24 +240,7 @@ async def post_trans_to_admin(callback: CallbackQuery,
         id_user=data_state['id_user'],
         id_card=int(data_state['card'])
     )
-    id_trans_coming = await add_trans_coming_with_id(trans_coming)
+    await add_trans_coming_with_id(trans_coming)
     ##############################
-
-
-    # Добавление зарезервированных билетов
-    tickets = []
-    i = 1
-    while i <= data_state['count_tickets']:
-        ticket = STicketAdd(
-            id_user=data_state['id_user'],
-            isFinish=False,
-            id_lottery=data_state['id_lottery'],
-            id_trans_expense=id_trans_expense,
-            status=TicketStatus.WAIT
-        )
-        tickets.append(ticket)
-        i += 1
-    await add_tickets(tickets)
-    ##########################
 
     await state.clear()

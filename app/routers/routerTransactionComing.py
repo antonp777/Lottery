@@ -6,15 +6,17 @@ from aiogram import Bot
 from BOT.keyboards.inlineKeyboard import inlineKeyboardGMenuCabinet
 from BOT.util.generateDataReport import generate_data_for_report
 from app.Models.ModelsEnum import TransExpenseStatus, TicketStatus
+from app.Schemas.STicket import STicketAdd
 
 from app.Schemas.STransactionComing import *
 from app.config import settings
 from app.dao.TransactionComingDAO import TransactionComingDAO
 from app.dao.TransactionExpenceDAO import TransactionExpenceDAO
 from app.dao.UserDAO import UserDAO
-from app.routers.routerLottery import result_lottery
-from app.routers.routerTicket import update_tickets_status
-from app.routers.routerTransactionExpence import update_status_trans_expence, delete_trans_expence
+from app.routers.routerLottery import result_lottery, get_ost_tickets_lottery, get_lottery_by_id
+from app.routers.routerTicket import update_tickets_status, add_tickets
+from app.routers.routerTransactionExpence import update_status_trans_expence, delete_trans_expence, \
+    update_status_sum_count_tickets_trans_expence
 
 router = APIRouter(
     prefix="/transComing",
@@ -68,21 +70,78 @@ async def add_trans_coming_with_id(data: STransactionComingAdd):
 async def update_status_trans_coming(id_trans: int, trans_data: STransactionComingUpdateStatus):
     trans = await TransactionComingDAO.get_model_one(id=id_trans)
     user = await UserDAO.get_model_one(id=trans.id_user)
-    text_message = '✅ Ваша покупка успешно проведена'
+
+    text_message = ''
+
+    if trans.id_trans_expence_info is not None:
+        trans_exp = await TransactionExpenceDAO.get_model_one(id=trans.id_trans_expence_info)
+        ost_tickets_lottery = await get_ost_tickets_lottery(trans_exp.id_lottery)
+        # Если остаток билетов в лотерее больше или равен количеству покупаемых билетам
+        if ost_tickets_lottery >= trans_exp.count_tickets:
+
+            await update_status_trans_expence(id_trans=trans.id_trans_expence_info, status=TransExpenseStatus.OK)
+
+            # Создание Билетов в БД
+            tickets = []
+            i = 1
+            while i <= trans_exp.count_tickets:
+                ticket = STicketAdd(
+                    id_user=user.id,
+                    isFinish=False,
+                    id_lottery=trans_exp.id_lottery,
+                    id_trans_expense=id_trans,
+                    status=TicketStatus.OK
+                )
+                tickets.append(ticket)
+                i += 1
+            await add_tickets(tickets)
+
+            # Розыгрыш лотереи
+            await result_lottery(trans_exp.id_lottery)
+
+            text_message = f'✅ Ваша покупка успешно проведена. Вы приобрели {trans_exp.count_tickets} бил.'
+
+        # Если остаток билетов в лотерее меньше количества покупаемых билетов, но не равен нулю
+        elif (ost_tickets_lottery < trans_exp.count_tickets) and (ost_tickets_lottery != 0):
+
+            lottery = await get_lottery_by_id(id_lottery=trans_exp.id_lottery)
+            new_sum = lottery.price_ticket*ost_tickets_lottery
+            await update_status_sum_count_tickets_trans_expence(id_trans=trans.id_trans_expence_info, status=TransExpenseStatus.OK, sum=new_sum, count_tickets=ost_tickets_lottery)
+
+            # Создание Билетов в БД
+            tickets = []
+            i = 1
+            while i <= ost_tickets_lottery:
+                ticket = STicketAdd(
+                    id_user=user.id,
+                    isFinish=False,
+                    id_lottery=trans_exp.id_lottery,
+                    id_trans_expense=id_trans,
+                    status=TicketStatus.OK
+                )
+                tickets.append(ticket)
+                i += 1
+            await add_tickets(tickets)
+
+            # Розыгрыш лотереи
+            await result_lottery(trans_exp.id_lottery)
+
+            text_message = f'✅ Ваша покупка успешно проведена.\nК сожалению Вам удалось приобрести только {ost_tickets_lottery} бил., так как их быстро разбирают!\nОстаток денежных средств зачислены на Ваш баланс.'
+
+        elif ost_tickets_lottery == 0:
+            await delete_trans_expence(id_trans=trans.id_trans_expence_info)
+            text_message = f'✅ Ваша операция успешно проведена.\nК сожалению Вам не удалось приобрести билеты, так как их быстро разбирают!\nДенежные средства зачислены на Ваш баланс.'
+
+    elif trans.id_trans_expence_info is None:
+
+
+        text_message = f'✅ Ваш баланс пополнен на сумму {trans.sum} руб.'
+
 
     await bot.delete_message(chat_id=user.chat_id, message_id=trans.message_id)
     await bot.send_message(chat_id=user.chat_id, text=text_message, reply_markup=inlineKeyboardGMenuCabinet)
 
     await TransactionComingDAO.update_model(model_id=id_trans, status=trans_data.status)
-    if trans.id_trans_expence_info is not None:
-        await update_status_trans_expence(id_trans=trans.id_trans_expence_info, status=TransExpenseStatus.OK)
-        await update_tickets_status(id_trans_exp=trans.id_trans_expence_info, status_search=TicketStatus.WAIT,
-                                    new_status=TicketStatus.OK)
-
-        trans_exp = await TransactionExpenceDAO.get_model_one(id=trans.id_trans_expence_info)
-
-        # Розыгрыш лотереи
-        await result_lottery(trans_exp.id_lottery)
 
 
 # Изменение Статуса Транзакции и добавление причины
