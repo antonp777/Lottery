@@ -9,7 +9,7 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - data:/var/lib/postgresql/data
 
   pgadmin:
     container_name: pgadmin_container
@@ -20,7 +20,7 @@ services:
       PGADMIN_CONFIG_SERVER_MODE: "False"
     user: '$UID:$GID'
     volumes:
-      - ./pgadmin-data:/var/lib/pgadmin
+      - pgadmin-data:/var/lib/pgadmin
     ports:
       - "5050:80"
 
@@ -41,3 +41,7 @@ services:
       && python BOT/bot.py"
     ports:
       - 7777:8000
+
+volumes:
+    data:
+    pgadmin-data:
