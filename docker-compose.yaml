@@ -19,6 +19,8 @@ services:
       PGADMIN_DEFAULT_PASSWORD: "admin"
       PGADMIN_CONFIG_SERVER_MODE: "False"
     user: '$UID:$GID'
+    depends_on:
+      - db
     volumes:
       - pgadmin-data:/var/lib/pgadmin
     ports:
@@ -34,8 +36,6 @@ services:
       - .env-non-dev
     depends_on:
       - db
-    volumes:
-      - .:/app
     command: >
       bash -c "alembic upgrade head && uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000"
       && python BOT/bot.py"
