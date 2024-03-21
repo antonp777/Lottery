@@ -6,10 +6,6 @@ services:
     restart: always
     env_file:
       - .env-non-dev
-    environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-lottery_app}
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
     ports:
       - 5432:5432
     volumes:
