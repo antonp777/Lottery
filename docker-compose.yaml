@@ -39,8 +39,6 @@ services:
     restart: always
     env_file:
       - .env-non-dev
-    environment:
-      DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/lottery_app
     depends_on:
       - db
     command: >
