@@ -6,10 +6,15 @@ services:
     restart: always
     env_file:
       - .env-non-dev
+    environment:
+      POSTGRES_DB: lottery_app
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - 5432:5432
     volumes:
       - data:/var/lib/postgresql/data
+      - ./create-dbs.sql:/docker-entrypoint-initdb.d/create-dbs.sql
 
   pgadmin:
     container_name: pgadmin_container
@@ -34,10 +39,12 @@ services:
     restart: always
     env_file:
       - .env-non-dev
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/lottery_app
     depends_on:
       - db
     command: >
-      bash -c "alembic upgrade head && uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000"
+      bash -c "alembic upgrade head && python BOT/bot.py && uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000"
     ports:
       - 7777:8000
 
