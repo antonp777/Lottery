@@ -10,11 +10,14 @@ services:
       POSTGRES_DB: "lottery_app"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
     ports:
       - "5432:5432"
     volumes:
-      - ./data:/var/lib/postgresql/data
-      - ./create-dbs.sql:/docker-entrypoint-initdb.d/create-dbs.sql
+      - data:/var/lib/postgresql/data
+      - .:/docker-entrypoint-initdb.d
+    networks:
+      - postgres
 
   pgadmin:
     container_name: pgadmin_container
@@ -23,13 +26,16 @@ services:
       PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
       PGADMIN_DEFAULT_PASSWORD: "admin"
       PGADMIN_CONFIG_SERVER_MODE: "False"
-    user: '$UID:$GID'
+#    user: '$UID:$GID'
     depends_on:
       - db
     volumes:
-      - ./pgadmin-data:/var/lib/pgadmin
+      - pgadmin-data:/var/lib/pgadmin
     ports:
       - "5050:80"
+    restart: unless-stopped
+    networks:
+      - postgres
 
   app:
     image: lottery_image
@@ -49,3 +55,6 @@ services:
 volumes:
     data:
     pgadmin-data:
+networks:
+  postgres:
+    driver: bridge
