@@ -26,7 +26,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
       PGADMIN_DEFAULT_PASSWORD: "admin"
       PGADMIN_CONFIG_SERVER_MODE: "False"
-#    user: '$UID:$GID'
+    user: '$UID:$GID'
     depends_on:
       - db
     volumes:
@@ -48,7 +48,7 @@ services:
     depends_on:
       - db
     command: >
-      bash -c "python BOT/bot.py && uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000"
+      bash -c "uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000"
     ports:
       - 7777:8000
 
