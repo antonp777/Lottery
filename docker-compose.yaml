@@ -10,12 +10,12 @@ services:
       POSTGRES_DB: "lottery_app"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
-      PGDATA: "/var/lib/postgresql/data/pgdata"
+      #PGDATA: "/var/lib/postgresql/data/pgdata"
     ports:
       - "5432:5432"
     volumes:
       - data:/var/lib/postgresql/data
-      - .:/docker-entrypoint-initdb.d
+      #- .:/docker-entrypoint-initdb.d
     networks:
       - postgres
 
