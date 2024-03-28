@@ -197,7 +197,7 @@ async def confirm_buy_at_user(callback: CallbackQuery,
 
         await delete_message_bot(callback, bot)
 
-        await callback.message.answer(f'Вы успешно приобрели {data_state['count_tickets']} шт. билетов',
+        await callback.message.answer(f"Вы успешно приобрели {data_state['count_tickets']} шт. билетов",
                                       reply_markup=inlineKeyboardGMenuCabinet)
 
         # Розыгрыш лотереи
