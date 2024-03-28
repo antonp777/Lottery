@@ -89,7 +89,7 @@ async def count_tickets_for_buy(message: Message,
         data_state = await state.get_data()
 
         await message.answer(
-            f'Вы хотите купить <b>{message.text}</b> бил.\nОбщая стоимость составляет <b>{data_state['price_ticket'] * int(message.text)}</b> руб.',
+            f"Вы хотите купить <b>{message.text}</b> бил.\nОбщая стоимость составляет <b>{data_state['price_ticket'] * int(message.text)}</b> руб.",
             reply_markup=keyboard.as_markup()
         )
     else:
