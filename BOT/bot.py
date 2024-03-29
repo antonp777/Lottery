@@ -1,4 +1,5 @@
 import sys
+import os
 import asyncio
 import logging
 
@@ -6,6 +7,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 
+sys.path.append(os.path.expanduser('~/app'))
 
 from app.config import settings
 
