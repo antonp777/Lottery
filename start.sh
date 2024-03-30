@@ -1,9 +1,7 @@
 #!/bin/bash
 
-cd /root/home/Lottery
-source venv/bin/activate
-screen -dmS lottery_app sudo python3 app/main.py
+source /root/home/Lottery/venv/bin/activate
+screen -dmS lottery_app sudo python3 /root/home/Lottery/app/main.py
 
-cd /root/home/Lottery
-source venv/bin/activate
-screen -dmS lottery_app sudo python3 BOT/bot.py
+source /root/home/Lottery/venv/bin/activate
+screen -dmS lottery_bot sudo python3 /root/home/Lottery/BOT/bot.py
