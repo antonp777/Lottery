@@ -4,3 +4,4 @@ from app.dao.BaseDAO import BaseDAO
 
 class UserAdminDAO(BaseDAO):
     model = UserAdmin
+

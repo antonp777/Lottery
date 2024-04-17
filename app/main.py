@@ -1,14 +1,7 @@
-import datetime
-import logging
-from contextlib import asynccontextmanager
-
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 
-from app.database import Base, engine
 from app.routers.routerUser import router as routerUser
 from app.routers.routerCard import router as routerCard
 from app.routers.routerLottery import router as routerLottery
@@ -16,15 +9,12 @@ from app.routers.routerTicket import router as routerTicket
 from app.routers.routerTransactionComing import router as routerTransComing
 from app.routers.routerTransactionExpence import router as routerTransExpence
 from app.routers.routerAuth import router as routerAuth
+from app.auth.auth_docs import router as token
 
 from app.pages.router import router as router_pages
 from app.pages.routerPageLottery import router as router_ui_lottery
 from app.pages.routerPageCard import router as router_ui_card
 from app.pages.routerPageTransComing import router as router_ui_trans_coming
-
-
-
-
 
 app = FastAPI(openapi_prefix="/api", title="API Lottery", version="1.0.0")
 
@@ -44,6 +34,7 @@ app.add_middleware(
                    "Access-Control-Allow"],
 )
 
+app.include_router(token)
 app.include_router(routerAuth)
 app.include_router(routerUser)
 app.include_router(routerLottery)
@@ -55,12 +46,6 @@ app.include_router(router_pages)
 app.include_router(router_ui_lottery)
 app.include_router(router_ui_card)
 app.include_router(router_ui_trans_coming)
-
-
-# async def init_tables():
-#     async with engine.begin() as conn:
-#         # await conn.run_sync(Base.metadata.drop_all)
-#         await conn.run_sync(Base.metadata.create_all)
 
 
 if __name__ == '__main__':

@@ -14,7 +14,8 @@ from app.dao.TransactionExpenceDAO import TransactionExpenceDAO
 
 router = APIRouter(
     prefix="/lottery",
-    tags=["Лотереи"]
+    tags=["Лотереи"],
+
 )
 bot = Bot(token=settings.TOKEN_BOT, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
